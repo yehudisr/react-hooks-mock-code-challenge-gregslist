@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import ListingsContainer from "./ListingsContainer";
+import NewListingForm from "./NewListingForm"
 import {url} from '../config'
 
 function App() {
@@ -35,16 +36,28 @@ function App() {
     listing.description.toLowerCase().includes(search.toLowerCase())
   )
 
-  const handleSort = (e) => setCheck(e.target.value)
+  function handleSort(){
+    setCheck(checked => !checked)
+  }
   
-  const sortListing = [...filterListing].sort((a,b) => a.location.localeCompare(b.location))
-    
+  const sortListing = () => {
+    if(checked) {
+    return [...filterListing].sort((a,b) => a.location.localeCompare(b.location))
+    } else {
+     return  [...filterListing]
+    }
+  }
 
+  function handleAddListing(newListing){
+    setListings([...listings, newListing])
+  }
 
+console.log(sortListing())
   return (
     <div className="app">
       <Header checked={checked} handleSort={handleSort} search={search} handleSearch={handleSearch} />
-      <ListingsContainer handleDelete={handleDelete} listings={sortListing} />
+      <NewListingForm onAddListing={handleAddListing}/>
+      <ListingsContainer handleDelete={handleDelete} listings={sortListing()} />
     </div>
   );
 }
